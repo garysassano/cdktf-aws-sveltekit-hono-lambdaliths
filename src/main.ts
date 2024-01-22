@@ -10,10 +10,13 @@ import { RegistryImage } from "../.gen/providers/docker/registry-image";
 export class MyStack extends TerraformStack {
   constructor(scope: Construct, id: string) {
     super(scope, id);
+
     new AwsProvider(this, "aws", {});
+
     new EcrRepository(this, "my-ecr-repo", {
       name: "my-ecr-repo",
     });
+
     const token = new DataAwsEcrAuthorizationToken(this, "token", {});
     new DockerProvider(this, "docker", {
       registryAuth: [
@@ -24,11 +27,13 @@ export class MyStack extends TerraformStack {
         },
       ],
     });
+
     const myDockerImage = new Image(this, "my-docker-image", {
       buildAttribute: { context: "." },
       name: "${" + token.proxyEndpoint + "}/my-ecr-repo:latest",
       platform: "linux/arm64",
     });
+
     new RegistryImage(this, "media-handler", {
       name: myDockerImage.name,
     });
