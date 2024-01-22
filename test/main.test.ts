@@ -1,9 +1,9 @@
-import { Testing } from 'cdktf';
-import { MyStack } from '../src/main';
+import { Testing } from "cdktf";
+import { MyStack } from "../src/main";
 
-test('Snapshot', () => {
+test("Snapshot", () => {
   const template = Testing.synthScope((scope) => {
-    new MyStack(scope, 'test');
+    new MyStack(scope, "test");
   });
   expect(template).toMatchSnapshot();
 });

@@ -1,10 +1,13 @@
-import { javascript } from 'projen';
-import { CdktfTypeScriptApp } from 'projen-cdktf-app-ts';
+import { javascript } from "projen";
+import { CdktfTypeScriptApp } from "projen-cdktf-app-ts";
 const project = new CdktfTypeScriptApp({
-  defaultReleaseBranch: 'main',
-  devDeps: ['projen-cdktf-app-ts'],
-  name: 'cdktf-project',
+  defaultReleaseBranch: "main",
+  devDeps: ["projen-cdktf-app-ts"],
+  eslint: true,
+  name: "cdktf-project",
   packageManager: javascript.NodePackageManager.PNPM,
+  pnpmVersion: "8.14.2",
+  prettier: true,
   projenrcTs: true,
 
   // deps: [],                /* Runtime dependencies of this module. */
