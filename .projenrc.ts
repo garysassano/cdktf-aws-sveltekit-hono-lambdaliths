@@ -11,6 +11,9 @@ const project = new CdktfTypeScriptApp({
   prettier: true,
   projenrcTs: true,
 
-  terraformProviders: ["hashicorp/aws@~> 5.33.0"],
+  terraformProviders: [
+    "hashicorp/aws@~> 5.33.0",
+    "kreuzwerker/docker@~> 3.0.2",
+  ],
 });
 project.synth();

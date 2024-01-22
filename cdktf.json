@@ -3,7 +3,8 @@
   "language": "typescript",
   "output": "cdktf.out",
   "terraformProviders": [
-    "hashicorp/aws@~> 5.33.0"
+    "hashicorp/aws@~> 5.33.0",
+    "kreuzwerker/docker@~> 3.0.2"
   ],
   "context": {
     "excludeStackIdFromLogicalIds": "true",

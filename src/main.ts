@@ -1,5 +1,11 @@
 import { App, TerraformStack } from "cdktf";
 import { Construct } from "constructs";
+import { DataAwsEcrAuthorizationToken } from "../.gen/providers/aws/data-aws-ecr-authorization-token";
+import { EcrRepository } from "../.gen/providers/aws/ecr-repository";
+import { AwsProvider } from "../.gen/providers/aws/provider";
+import { Image } from "../.gen/providers/docker/image";
+import { DockerProvider } from "../.gen/providers/docker/provider";
+import { RegistryImage } from "../.gen/providers/docker/registry-image";
 
 export class MyStack extends TerraformStack {
   constructor(scope: Construct, id: string) {
@@ -10,7 +16,7 @@ export class MyStack extends TerraformStack {
     });
     const token = new DataAwsEcrAuthorizationToken(this, "token", {});
     new DockerProvider(this, "docker", {
-      registry_auth: [
+      registryAuth: [
         {
           address: token.proxyEndpoint,
           password: token.password,
@@ -19,11 +25,7 @@ export class MyStack extends TerraformStack {
       ],
     });
     const myDockerImage = new Image(this, "my-docker-image", {
-      build: [
-        {
-          context: ".",
-        },
-      ],
+      buildAttribute: { context: "." },
       name: "${" + token.proxyEndpoint + "}/my-ecr-repo:latest",
       platform: "linux/arm64",
     });
