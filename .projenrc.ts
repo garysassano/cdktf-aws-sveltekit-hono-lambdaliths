@@ -11,6 +11,6 @@ const project = new CdktfTypeScriptApp({
   prettier: true,
   projenrcTs: true,
 
-  deps: ["@cdktf/provider-aws@19.2.0"],
+  terraformProviders: ["hashicorp/aws@~> 5.33.0"],
 });
 project.synth();

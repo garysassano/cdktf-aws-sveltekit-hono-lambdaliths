@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@cdktf/provider-aws':
-    specifier: 19.2.0
-    version: 19.2.0(cdktf@0.20.1)(constructs@10.3.0)
   cdktf:
     specifier: ^0.20.1
     version: 0.20.1(constructs@10.3.0)
@@ -569,17 +566,6 @@ packages:
       nan: 2.18.0
       prebuild-install: 7.1.1
     dev: true
-
-  /@cdktf/provider-aws@19.2.0(cdktf@0.20.1)(constructs@10.3.0):
-    resolution: {integrity: sha512-FetLBwk6UN2xb4qUibJVJchyED+CwnB1LXiKMywyB7aVR04nU4QXsEmD9y+EdIGWdfn5uu63ktd8wp7qCp0sGQ==}
-    engines: {node: '>= 18.12.0'}
-    peerDependencies:
-      cdktf: ^0.20.0
-      constructs: ^10.3.0
-    dependencies:
-      cdktf: 0.20.1(constructs@10.3.0)
-      constructs: 10.3.0
-    dev: false
 
   /@cdktf/provider-generator@0.20.1(constructs@10.1.167):
     resolution: {integrity: sha512-gWF3wDey5ZbXO+rNURrVPKYuHCGQaQnX9j3T/aQQF0+gUBYb21cWewAAAvMTd2uXoK3k4dt1AkFzvF9JvU4wNQ==}

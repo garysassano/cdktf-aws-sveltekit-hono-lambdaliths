@@ -44,7 +44,6 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@cdktf/provider-aws": "19.2.0",
     "cdktf": "^0.20.1",
     "constructs": "^10.3.0"
   },

@@ -84,11 +84,6 @@
       "type": "build"
     },
     {
-      "name": "@cdktf/provider-aws",
-      "version": "19.2.0",
-      "type": "runtime"
-    },
-    {
       "name": "cdktf",
       "version": "^0.20.1",
       "type": "runtime"
