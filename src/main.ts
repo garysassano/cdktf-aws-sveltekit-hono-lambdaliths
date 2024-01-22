@@ -18,6 +18,7 @@ export class MyStack extends TerraformStack {
     });
 
     const token = new DataAwsEcrAuthorizationToken(this, "token", {});
+
     new DockerProvider(this, "docker", {
       registryAuth: [
         {
