@@ -1,3 +1,4 @@
+import path from "path";
 import { App, TerraformStack } from "cdktf";
 import { Construct } from "constructs";
 import { DataAwsEcrAuthorizationToken } from "../.gen/providers/aws/data-aws-ecr-authorization-token";
@@ -30,7 +31,7 @@ export class MyStack extends TerraformStack {
     });
 
     const myDockerImage = new Image(this, "my-docker-image", {
-      buildAttribute: { context: "." },
+      buildAttribute: { context: path.join(__dirname, "back") },
       name: "${" + token.proxyEndpoint + "}/my-ecr-repo:latest",
       platform: "linux/arm64",
     });
