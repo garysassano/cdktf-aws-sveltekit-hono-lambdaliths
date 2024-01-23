@@ -6,6 +6,9 @@ import { EcrRepository } from "../.gen/providers/aws/ecr-repository";
 import { EcsCluster } from "../.gen/providers/aws/ecs-cluster";
 import { EcsService } from "../.gen/providers/aws/ecs-service";
 import { EcsTaskDefinition } from "../.gen/providers/aws/ecs-task-definition";
+import { IamPolicy } from "../.gen/providers/aws/iam-policy";
+import { IamRole } from "../.gen/providers/aws/iam-role";
+import { IamRolePolicyAttachment } from "../.gen/providers/aws/iam-role-policy-attachment";
 import { AwsProvider } from "../.gen/providers/aws/provider";
 import { Image } from "../.gen/providers/docker/image";
 import { DockerProvider } from "../.gen/providers/docker/provider";
@@ -64,15 +67,63 @@ export class MyStack extends TerraformStack {
       name: "ecs-cluster",
     });
 
+    const ecsTaskExecutionRolePolicy = new IamPolicy(
+      this,
+      "ecsTaskExecutionRolePolicy",
+      {
+        name: "ecsTaskExecutionRolePolicy",
+        policy: JSON.stringify({
+          Version: "2012-10-17",
+          Statement: [
+            {
+              Effect: "Allow",
+              Action: [
+                "ecr:GetAuthorizationToken",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents",
+              ],
+              Resource: "*",
+            },
+          ],
+        }),
+      },
+    );
+
+    const ecsExecutionRole = new IamRole(this, "ecsExecutionRole", {
+      name: "ecsExecutionRole",
+      assumeRolePolicy: JSON.stringify({
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Principal: {
+              Service: "ecs-tasks.amazonaws.com",
+            },
+            Action: "sts:AssumeRole",
+          },
+        ],
+      }),
+    });
+
+    new IamRolePolicyAttachment(this, "ecsExecutionRolePolicyAttachment", {
+      role: ecsExecutionRole.name,
+      policyArn: ecsTaskExecutionRolePolicy.arn,
+    });
+
     const backTaskDefinition = new EcsTaskDefinition(this, "BackTaskDef", {
+      executionRoleArn: ecsExecutionRole.arn,
       family: "back-task",
+      networkMode: "awsvpc",
+      requiresCompatibilities: ["FARGATE"],
+      cpu: "256",
+      memory: "512",
       containerDefinitions: JSON.stringify([
         {
           name: "back",
           image: backRepo.repositoryUrl,
-          essential: true,
-          memory: 512,
-          cpu: 256,
           portMappings: [
             {
               containerPort: 4000,
