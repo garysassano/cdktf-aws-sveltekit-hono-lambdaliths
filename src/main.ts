@@ -12,13 +12,17 @@ export class MyStack extends TerraformStack {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
-    new AwsProvider(this, "aws", {});
+    new AwsProvider(this, "aws");
 
-    new EcrRepository(this, "my-ecr-repo", {
-      name: "my-ecr-repo",
+    const backRepo = new EcrRepository(this, "back-repo", {
+      name: "back-repo",
     });
 
-    const token = new DataAwsEcrAuthorizationToken(this, "token", {});
+    const frontRepo = new EcrRepository(this, "front-repo", {
+      name: "front-repo",
+    });
+
+    const token = new DataAwsEcrAuthorizationToken(this, "token");
 
     new DockerProvider(this, "docker", {
       registryAuth: [
@@ -30,14 +34,24 @@ export class MyStack extends TerraformStack {
       ],
     });
 
-    const myDockerImage = new Image(this, "my-docker-image", {
+    const backImage = new Image(this, "back-image", {
       buildAttribute: { context: path.join(__dirname, "back") },
-      name: "${" + token.proxyEndpoint + "}/my-ecr-repo:latest",
+      name: backRepo.repositoryUrl,
       platform: "linux/arm64",
     });
 
-    new RegistryImage(this, "media-handler", {
-      name: myDockerImage.name,
+    const frontImage = new Image(this, "front-image", {
+      buildAttribute: { context: path.join(__dirname, "front") },
+      name: frontRepo.repositoryUrl,
+      platform: "linux/arm64",
+    });
+
+    new RegistryImage(this, "back-upload", {
+      name: backImage.name,
+    });
+
+    new RegistryImage(this, "front-upload", {
+      name: frontImage.name,
     });
   }
 }
