@@ -12,18 +12,13 @@ export class MyStack extends TerraformStack {
   constructor(scope: Construct, id: string) {
     super(scope, id);
 
+    // Configure AWS provider
     new AwsProvider(this, "aws");
 
-    const backRepo = new EcrRepository(this, "back-repo", {
-      name: "back-repo",
-    });
-
-    const frontRepo = new EcrRepository(this, "front-repo", {
-      name: "front-repo",
-    });
-
+    // Get ECR authorization token
     const token = new DataAwsEcrAuthorizationToken(this, "token");
 
+    // Configure Docker provider
     new DockerProvider(this, "docker", {
       registryAuth: [
         {
@@ -34,22 +29,30 @@ export class MyStack extends TerraformStack {
       ],
     });
 
+    // Create ECR repos
+    const backRepo = new EcrRepository(this, "back-repo", {
+      name: "back-repo",
+    });
+    const frontRepo = new EcrRepository(this, "front-repo", {
+      name: "front-repo",
+    });
+
+    // Create OCI images
     const backImage = new Image(this, "back-image", {
       buildAttribute: { context: path.join(__dirname, "back") },
       name: backRepo.repositoryUrl,
       platform: "linux/arm64",
     });
-
     const frontImage = new Image(this, "front-image", {
       buildAttribute: { context: path.join(__dirname, "front") },
       name: frontRepo.repositoryUrl,
       platform: "linux/arm64",
     });
 
+    // Upload OCI images to ECR
     new RegistryImage(this, "back-upload", {
       name: backImage.name,
     });
-
     new RegistryImage(this, "front-upload", {
       name: frontImage.name,
     });
