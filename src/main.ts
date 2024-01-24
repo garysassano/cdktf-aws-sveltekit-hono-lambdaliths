@@ -3,12 +3,10 @@ import { App, TerraformStack } from "cdktf";
 import { Construct } from "constructs";
 import { DataAwsEcrAuthorizationToken } from "../.gen/providers/aws/data-aws-ecr-authorization-token";
 import { EcrRepository } from "../.gen/providers/aws/ecr-repository";
-import { EcsCluster } from "../.gen/providers/aws/ecs-cluster";
-import { EcsService } from "../.gen/providers/aws/ecs-service";
-import { EcsTaskDefinition } from "../.gen/providers/aws/ecs-task-definition";
-import { IamPolicy } from "../.gen/providers/aws/iam-policy";
+// import { LambdaPermission } from "../.gen/providers/aws/lambda-permission";
 import { IamRole } from "../.gen/providers/aws/iam-role";
-import { IamRolePolicyAttachment } from "../.gen/providers/aws/iam-role-policy-attachment";
+import { LambdaFunction } from "../.gen/providers/aws/lambda-function";
+// import { DataAwsIamPolicyDocument } from "../.gen/providers/aws/data-aws-iam-policy-document";
 import { AwsProvider } from "../.gen/providers/aws/provider";
 import { Image } from "../.gen/providers/docker/image";
 import { DockerProvider } from "../.gen/providers/docker/provider";
@@ -46,7 +44,7 @@ export class MyStack extends TerraformStack {
     // Build Docker images
     const backImage = new Image(this, "BackImage", {
       buildAttribute: { context: path.join(__dirname, "back") },
-      name: backRepo.repositoryUrl,
+      name: `${backRepo.repositoryUrl}:latest`,
       platform: "linux/arm64",
     });
     const frontImage = new Image(this, "FrontImage", {
@@ -62,6 +60,48 @@ export class MyStack extends TerraformStack {
     new RegistryImage(this, "FrontUpload", {
       name: frontImage.name,
     });
+
+    // IAM Role for Lambda
+    const lambdaRole = new IamRole(this, "LambdaExecutionRole", {
+      assumeRolePolicy: JSON.stringify({
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Principal: {
+              Service: "lambda.amazonaws.com",
+            },
+            Action: "sts:AssumeRole",
+          },
+        ],
+      }),
+    });
+
+    // Lambda function
+    new LambdaFunction(this, "BackLambdaFunction", {
+      functionName: "BackLambda",
+      role: lambdaRole.arn,
+      packageType: "Image",
+      imageUri: backImage.name,
+    });
+
+    // const policy = new DataAwsIamPolicyDocument(this, "policy", {});
+
+    // new IamRolePolicyAttachment(this, "LambdaRolePolicy", {
+    //   role: lambdaRole.name,
+    //   policyArn:
+    //     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    // });
+
+    // (Optional) Lambda permission, if the function needs to be triggered by other AWS services
+    // new LambdaPermission(this, "LambdaPermission", {
+    //   action: "lambda:InvokeFunction",
+    //   functionName: lambdaFunction.functionName,
+    //   principal: "s3.amazonaws.com", // Example for S3
+    //   // other configurations as required
+    // });
+
+    // ... (rest of your existing code)
   }
 }
 
