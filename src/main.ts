@@ -83,7 +83,10 @@ export class MyStack extends TerraformStack {
       role: lambdaRole.arn,
       packageType: "Image",
       imageUri: backImage.name,
+      architectures: ["arm64"],
       memorySize: 1792,
+      timeout: 5,
+      loggingConfig: { logFormat: "JSON" },
     });
 
     // const policy = new DataAwsIamPolicyDocument(this, "policy", {});
