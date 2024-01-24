@@ -1,5 +1,5 @@
 import path from "path";
-import { App, TerraformStack } from "cdktf";
+import { App, TerraformStack, Fn } from "cdktf";
 import { Construct } from "constructs";
 import { DataAwsEcrAuthorizationToken } from "../.gen/providers/aws/data-aws-ecr-authorization-token";
 import { EcrRepository } from "../.gen/providers/aws/ecr-repository";
@@ -48,11 +48,17 @@ export class MyStack extends TerraformStack {
       buildAttribute: { context: path.join(__dirname, "back") },
       name: `${backRepo.repositoryUrl}:latest`,
       platform: "linux/arm64",
+      triggers: {
+        file_sha256: Fn.filesha256(path.join(__dirname, "back/Dockerfile")),
+      },
     });
     const frontImage = new Image(this, "FrontImage", {
       buildAttribute: { context: path.join(__dirname, "front") },
-      name: frontRepo.repositoryUrl,
+      name: `${frontRepo.repositoryUrl}:latest`,
       platform: "linux/arm64",
+      triggers: {
+        file_sha256: Fn.filesha256(path.join(__dirname, "front/Dockerfile")),
+      },
     });
 
     // Upload Docker images to ECR
