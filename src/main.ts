@@ -62,7 +62,7 @@ export class MyStack extends TerraformStack {
     });
 
     // IAM Role for Lambda
-    const lambdaRole = new IamRole(this, "LambdaExecutionRole", {
+    const lambdaExecRole = new IamRole(this, "LambdaExecRole", {
       assumeRolePolicy: JSON.stringify({
         Version: "2012-10-17",
         Statement: [
@@ -79,8 +79,8 @@ export class MyStack extends TerraformStack {
 
     // Lambda function
     new LambdaFunction(this, "BackLambda", {
-      functionName: "BackLambda",
-      role: lambdaRole.arn,
+      functionName: "back-lambda",
+      role: lambdaExecRole.arn,
       packageType: "Image",
       imageUri: backImage.name,
       architectures: ["arm64"],
