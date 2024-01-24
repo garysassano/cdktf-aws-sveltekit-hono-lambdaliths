@@ -62,35 +62,6 @@ export class MyStack extends TerraformStack {
     new RegistryImage(this, "FrontUpload", {
       name: frontImage.name,
     });
-
-    const ecsCluster = new EcsCluster(this, "EcsCluster", {
-      name: "ecs-cluster",
-    });
-
-    const ecsTaskExecutionRolePolicy = new IamPolicy(
-      this,
-      "ecsTaskExecutionRolePolicy",
-      {
-        name: "ecsTaskExecutionRolePolicy",
-        policy: JSON.stringify({
-          Version: "2012-10-17",
-          Statement: [
-            {
-              Effect: "Allow",
-              Action: [
-                "ecr:GetAuthorizationToken",
-                "ecr:BatchCheckLayerAvailability",
-                "ecr:GetDownloadUrlForLayer",
-                "ecr:BatchGetImage",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-              ],
-              Resource: "*",
-            },
-          ],
-        }),
-      },
-    );
   }
 }
 
