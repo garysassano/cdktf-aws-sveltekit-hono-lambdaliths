@@ -65,12 +65,12 @@ export class MyStack extends TerraformStack {
       triggers: { filesha256: frontDockerfileDigest },
     });
 
-    // Upload Docker images to ECR
-    new RegistryImage(this, "BackUpload", {
+    // Push Docker images to ECR
+    new RegistryImage(this, "BackPush", {
       name: backImage.name,
       triggers: { filesha256: backDockerfileDigest },
     });
-    new RegistryImage(this, "FrontUpload", {
+    new RegistryImage(this, "FrontPush", {
       name: frontImage.name,
       triggers: { filesha256: frontDockerfileDigest },
     });
