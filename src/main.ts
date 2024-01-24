@@ -7,6 +7,7 @@ import { EcrRepository } from "../.gen/providers/aws/ecr-repository";
 import { IamRole } from "../.gen/providers/aws/iam-role";
 import { IamRolePolicyAttachment } from "../.gen/providers/aws/iam-role-policy-attachment";
 import { LambdaFunction } from "../.gen/providers/aws/lambda-function";
+import { LambdaFunctionUrl } from "../.gen/providers/aws/lambda-function-url";
 // import { DataAwsIamPolicyDocument } from "../.gen/providers/aws/data-aws-iam-policy-document";
 import { AwsProvider } from "../.gen/providers/aws/provider";
 import { Image } from "../.gen/providers/docker/image";
@@ -86,7 +87,7 @@ export class MyStack extends TerraformStack {
     });
 
     // Lambda function
-    new LambdaFunction(this, "BackLambda", {
+    const backLambda = new LambdaFunction(this, "BackLambda", {
       functionName: "back-lambda",
       role: lambdaRole.arn,
       packageType: "Image",
@@ -95,6 +96,11 @@ export class MyStack extends TerraformStack {
       memorySize: 1792,
       timeout: 5,
       loggingConfig: { logFormat: "JSON" },
+    });
+
+    new LambdaFunctionUrl(this, "BackLambdaUrl", {
+      functionName: backLambda.functionName,
+      authorizationType: "NONE",
     });
 
     // const policy = new DataAwsIamPolicyDocument(this, "policy", {});
