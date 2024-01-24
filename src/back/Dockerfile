@@ -12,4 +12,4 @@ RUN yarn install && yarn build
 
 EXPOSE 4000
 
-CMD [ "yarn", "run", "start" ]
+CMD [ "yarn", "run", "startx" ]

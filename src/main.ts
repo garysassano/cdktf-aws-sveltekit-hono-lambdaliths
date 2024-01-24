@@ -43,30 +43,36 @@ export class MyStack extends TerraformStack {
       name: "front-repo",
     });
 
+    // Calculate the SHA256 digests for the Dockerfiles
+    const backDockerfileDigest = Fn.filesha256(
+      path.join(__dirname, "back/Dockerfile"),
+    );
+    const frontDockerfileDigest = Fn.filesha256(
+      path.join(__dirname, "front/Dockerfile"),
+    );
+
     // Build Docker images
     const backImage = new Image(this, "BackImage", {
       buildAttribute: { context: path.join(__dirname, "back") },
       name: `${backRepo.repositoryUrl}:latest`,
       platform: "linux/arm64",
-      triggers: {
-        file_sha256: Fn.filesha256(path.join(__dirname, "back/Dockerfile")),
-      },
+      triggers: { filesha256: backDockerfileDigest },
     });
     const frontImage = new Image(this, "FrontImage", {
       buildAttribute: { context: path.join(__dirname, "front") },
       name: `${frontRepo.repositoryUrl}:latest`,
       platform: "linux/arm64",
-      triggers: {
-        file_sha256: Fn.filesha256(path.join(__dirname, "front/Dockerfile")),
-      },
+      triggers: { filesha256: frontDockerfileDigest },
     });
 
     // Upload Docker images to ECR
     new RegistryImage(this, "BackUpload", {
       name: backImage.name,
+      triggers: { filesha256: backDockerfileDigest },
     });
     new RegistryImage(this, "FrontUpload", {
       name: frontImage.name,
+      triggers: { filesha256: frontDockerfileDigest },
     });
 
     // IAM Role for Lambda
