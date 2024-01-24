@@ -43,7 +43,7 @@ export class MyStack extends TerraformStack {
       name: "front-repo",
     });
 
-    // Create OCI images
+    // Build Docker images
     const backImage = new Image(this, "BackImage", {
       buildAttribute: { context: path.join(__dirname, "back") },
       name: backRepo.repositoryUrl,
@@ -55,7 +55,7 @@ export class MyStack extends TerraformStack {
       platform: "linux/arm64",
     });
 
-    // Upload OCI images to ECR
+    // Upload Docker images to ECR
     new RegistryImage(this, "BackUpload", {
       name: backImage.name,
     });
@@ -91,62 +91,6 @@ export class MyStack extends TerraformStack {
         }),
       },
     );
-
-    const ecsExecutionRole = new IamRole(this, "ecsExecutionRole", {
-      name: "ecsExecutionRole",
-      assumeRolePolicy: JSON.stringify({
-        Version: "2012-10-17",
-        Statement: [
-          {
-            Effect: "Allow",
-            Principal: {
-              Service: "ecs-tasks.amazonaws.com",
-            },
-            Action: "sts:AssumeRole",
-          },
-        ],
-      }),
-    });
-
-    new IamRolePolicyAttachment(this, "ecsExecutionRolePolicyAttachment", {
-      role: ecsExecutionRole.name,
-      policyArn: ecsTaskExecutionRolePolicy.arn,
-    });
-
-    const backTaskDefinition = new EcsTaskDefinition(this, "BackTaskDef", {
-      executionRoleArn: ecsExecutionRole.arn,
-      family: "back-task",
-      networkMode: "awsvpc",
-      requiresCompatibilities: ["FARGATE"],
-      cpu: "256",
-      memory: "512",
-      containerDefinitions: JSON.stringify([
-        {
-          name: "back",
-          image: backRepo.repositoryUrl,
-          portMappings: [
-            {
-              containerPort: 4000,
-              hostPort: 4000,
-            },
-          ],
-          // environment: [
-          //   { name: "REDIS_SERVER", value: "your-redis-server-address" },
-          // ],
-        },
-      ]),
-    });
-
-    new EcsService(this, "BackService", {
-      name: "back-service",
-      cluster: ecsCluster.id,
-      taskDefinition: backTaskDefinition.arn,
-      launchType: "FARGATE",
-      // networkConfiguration: {
-      //   // Define network configurations here
-      // },
-      desiredCount: 1,
-    });
   }
 }
 
