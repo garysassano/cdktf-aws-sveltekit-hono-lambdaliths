@@ -5,6 +5,7 @@ import { DataAwsEcrAuthorizationToken } from "../.gen/providers/aws/data-aws-ecr
 import { EcrRepository } from "../.gen/providers/aws/ecr-repository";
 // import { LambdaPermission } from "../.gen/providers/aws/lambda-permission";
 import { IamRole } from "../.gen/providers/aws/iam-role";
+import { IamRolePolicyAttachment } from "../.gen/providers/aws/iam-role-policy-attachment";
 import { LambdaFunction } from "../.gen/providers/aws/lambda-function";
 // import { DataAwsIamPolicyDocument } from "../.gen/providers/aws/data-aws-iam-policy-document";
 import { AwsProvider } from "../.gen/providers/aws/provider";
@@ -75,6 +76,12 @@ export class MyStack extends TerraformStack {
           },
         ],
       }),
+    });
+
+    new IamRolePolicyAttachment(this, "LambdaExecPolicyAttachment", {
+      role: lambdaExecRole.name,
+      policyArn:
+        "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     });
 
     // Lambda function
