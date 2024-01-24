@@ -78,7 +78,7 @@ export class MyStack extends TerraformStack {
     });
 
     // Lambda function
-    new LambdaFunction(this, "BackLambdaFunction", {
+    new LambdaFunction(this, "BackLambda", {
       functionName: "BackLambda",
       role: lambdaRole.arn,
       packageType: "Image",
