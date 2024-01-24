@@ -7,4 +7,4 @@ ADD yarn.lock /var/task/yarn.lock
 RUN yarn install
 ADD . /var/task
 EXPOSE 4000
-CMD ["yarn", "run", "start"]
+CMD [ "yarn", "run", "start" ]
