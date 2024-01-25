@@ -1,8 +1,27 @@
-FROM public.ecr.aws/docker/library/node:20-slim
+# Base image with node and pnpm
+FROM public.ecr.aws/docker/library/node:20-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+WORKDIR /var/task
+COPY . /var/task
+
+# Production dependencies
+FROM base AS prod-deps
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.1 /lambda-adapter /opt/extensions/lambda-adapter
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+
+# Build stage
+FROM base AS build
+COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.1 /lambda-adapter /opt/extensions/lambda-adapter
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run build
+
+# Final stage
+FROM base
+COPY --from=prod-deps /var/task/node_modules /var/task/node_modules
+COPY --from=build /var/task/dist /var/task/dist
 COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.1 /lambda-adapter /opt/extensions/lambda-adapter
 ENV AWS_LWA_PORT=4000
-WORKDIR /var/task
-ADD . /var/task
-RUN yarn install && yarn build
 EXPOSE 4000
-CMD [ "yarn", "run", "start" ]
+CMD [ "pnpm", "start" ]
