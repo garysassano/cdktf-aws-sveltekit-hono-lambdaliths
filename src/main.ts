@@ -4,15 +4,15 @@ import { Construct } from "constructs";
 import { DataAwsEcrAuthorizationToken } from "../.gen/providers/aws/data-aws-ecr-authorization-token";
 import { EcrRepository } from "../.gen/providers/aws/ecr-repository";
 // import { LambdaPermission } from "../.gen/providers/aws/lambda-permission";
-import { IamRole } from "../.gen/providers/aws/iam-role";
-import { IamRolePolicyAttachment } from "../.gen/providers/aws/iam-role-policy-attachment";
-import { LambdaFunction } from "../.gen/providers/aws/lambda-function";
-import { LambdaFunctionUrl } from "../.gen/providers/aws/lambda-function-url";
+// import { IamRole } from "../.gen/providers/aws/iam-role";
+// import { IamRolePolicyAttachment } from "../.gen/providers/aws/iam-role-policy-attachment";
+// import { LambdaFunction } from "../.gen/providers/aws/lambda-function";
+// import { LambdaFunctionUrl } from "../.gen/providers/aws/lambda-function-url";
 // import { DataAwsIamPolicyDocument } from "../.gen/providers/aws/data-aws-iam-policy-document";
 import { AwsProvider } from "../.gen/providers/aws/provider";
 import { Image } from "../.gen/providers/docker/image";
 import { DockerProvider } from "../.gen/providers/docker/provider";
-import { RegistryImage } from "../.gen/providers/docker/registry-image";
+// import { RegistryImage } from "../.gen/providers/docker/registry-image";
 
 export class MyStack extends TerraformStack {
   constructor(scope: Construct, id: string) {
@@ -52,7 +52,7 @@ export class MyStack extends TerraformStack {
     );
 
     // Build Docker images
-    const backImage = new Image(this, "BackImage", {
+    new Image(this, "BackImage", {
       buildAttribute: {
         context: path.join(__dirname, "back"),
         platform: "linux/amd64",
@@ -60,7 +60,7 @@ export class MyStack extends TerraformStack {
       name: `${backRepo.repositoryUrl}:latest`,
       triggers: { filesha256: backDockerfileDigest },
     });
-    const frontImage = new Image(this, "FrontImage", {
+    new Image(this, "FrontImage", {
       buildAttribute: {
         context: path.join(__dirname, "front"),
         platform: "linux/amd64",
@@ -69,55 +69,55 @@ export class MyStack extends TerraformStack {
       triggers: { filesha256: frontDockerfileDigest },
     });
 
-    // Push Docker images to ECR
-    new RegistryImage(this, "BackPush", {
-      name: backImage.name,
-      triggers: { filesha256: backDockerfileDigest },
-    });
-    new RegistryImage(this, "FrontPush", {
-      name: frontImage.name,
-      triggers: { filesha256: frontDockerfileDigest },
-    });
+    // // Push Docker images to ECR
+    // new RegistryImage(this, "BackPush", {
+    //   name: backImage.name,
+    //   triggers: { filesha256: backDockerfileDigest },
+    // });
+    // new RegistryImage(this, "FrontPush", {
+    //   name: frontImage.name,
+    //   triggers: { filesha256: frontDockerfileDigest },
+    // });
 
-    // IAM Role for Lambda
-    const lambdaRole = new IamRole(this, "LambdaRole", {
-      name: "lambda-role",
-      assumeRolePolicy: JSON.stringify({
-        Version: "2012-10-17",
-        Statement: [
-          {
-            Effect: "Allow",
-            Principal: {
-              Service: "lambda.amazonaws.com",
-            },
-            Action: "sts:AssumeRole",
-          },
-        ],
-      }),
-    });
+    // // IAM Role for Lambda
+    // const lambdaRole = new IamRole(this, "LambdaRole", {
+    //   name: "lambda-role",
+    //   assumeRolePolicy: JSON.stringify({
+    //     Version: "2012-10-17",
+    //     Statement: [
+    //       {
+    //         Effect: "Allow",
+    //         Principal: {
+    //           Service: "lambda.amazonaws.com",
+    //         },
+    //         Action: "sts:AssumeRole",
+    //       },
+    //     ],
+    //   }),
+    // });
 
-    new IamRolePolicyAttachment(this, "LambdaExecPolicyAttachment", {
-      role: lambdaRole.name,
-      policyArn:
-        "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
-    });
+    // new IamRolePolicyAttachment(this, "LambdaExecPolicyAttachment", {
+    //   role: lambdaRole.name,
+    //   policyArn:
+    //     "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+    // });
 
-    // Lambda function
-    const backLambda = new LambdaFunction(this, "BackLambda", {
-      functionName: "back-lambda",
-      role: lambdaRole.arn,
-      packageType: "Image",
-      imageUri: backImage.name,
-      architectures: ["arm64"],
-      memorySize: 1792,
-      timeout: 5,
-      loggingConfig: { logFormat: "JSON" },
-    });
+    // // Lambda function
+    // const backLambda = new LambdaFunction(this, "BackLambda", {
+    //   functionName: "back-lambda",
+    //   role: lambdaRole.arn,
+    //   packageType: "Image",
+    //   imageUri: backImage.name,
+    //   architectures: ["arm64"],
+    //   memorySize: 1792,
+    //   timeout: 5,
+    //   loggingConfig: { logFormat: "JSON" },
+    // });
 
-    new LambdaFunctionUrl(this, "BackLambdaUrl", {
-      functionName: backLambda.functionName,
-      authorizationType: "NONE",
-    });
+    // new LambdaFunctionUrl(this, "BackLambdaUrl", {
+    //   functionName: backLambda.functionName,
+    //   authorizationType: "NONE",
+    // });
 
     // const policy = new DataAwsIamPolicyDocument(this, "policy", {});
 
