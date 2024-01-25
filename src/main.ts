@@ -70,7 +70,7 @@ export class MyStack extends TerraformStack {
     });
 
     // Push Docker images to ECR
-    new RegistryImage(this, "BackPush", {
+    const backImageRegistry = new RegistryImage(this, "BackPush", {
       name: backImage.name,
       triggers: { filesha256: backDockerfileDigest },
     });
@@ -107,7 +107,7 @@ export class MyStack extends TerraformStack {
       functionName: "back-lambda",
       role: lambdaRole.arn,
       packageType: "Image",
-      imageUri: backImage.name,
+      imageUri: backImageRegistry.name,
       architectures: ["x86_64"],
       memorySize: 1792,
       timeout: 5,

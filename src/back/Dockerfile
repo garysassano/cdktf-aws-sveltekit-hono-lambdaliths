@@ -22,4 +22,4 @@ COPY --from=build /var/task/dist /var/task/dist
 COPY --from=public.ecr.aws/awsguru/aws-lambda-adapter:0.8.1 /lambda-adapter /opt/extensions/lambda-adapter
 ENV AWS_LWA_PORT=4000
 EXPOSE 4000
-CMD [ "node", "/dist/main" ]
+CMD [ "node", "dist/main" ]
