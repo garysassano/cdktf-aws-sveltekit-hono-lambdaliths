@@ -1,5 +1,5 @@
 # Base image with node and pnpm
-FROM public.ecr.aws/docker/library/node:20-slim AS base
+FROM --platform=${TARGETPLATFORM} public.ecr.aws/docker/library/node:20-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
