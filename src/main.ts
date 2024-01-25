@@ -55,7 +55,7 @@ export class MyStack extends TerraformStack {
     const backImage = new Image(this, "BackImage", {
       buildAttribute: {
         context: path.join(__dirname, "back"),
-        platform: "linux/x86_64",
+        platform: "linux/amd64",
       },
       name: `${backRepo.repositoryUrl}:latest`,
       triggers: { filesha256: backDockerfileDigest },
@@ -63,7 +63,7 @@ export class MyStack extends TerraformStack {
     const frontImage = new Image(this, "FrontImage", {
       buildAttribute: {
         context: path.join(__dirname, "front"),
-        platform: "linux/x86_64",
+        platform: "linux/amd64",
       },
       name: `${frontRepo.repositoryUrl}:latest`,
       triggers: { filesha256: frontDockerfileDigest },
