@@ -57,7 +57,7 @@ export class MyStack extends TerraformStack {
         context: path.join(__dirname, "back"),
         platform: "linux/amd64",
       },
-      name: `${backRepo.repositoryUrl}:latest`,
+      name: backRepo.repositoryUrl,
       triggers: { filesha256: backDockerfileDigest },
     });
     const frontImage = new Image(this, "FrontImage", {
@@ -70,11 +70,11 @@ export class MyStack extends TerraformStack {
     });
 
     // Push Docker images to ECR
-    const backImageRegistry = new RegistryImage(this, "BackPush", {
+    const backEcrImage = new RegistryImage(this, "BackEcrImage", {
       name: backImage.name,
       triggers: { filesha256: backDockerfileDigest },
     });
-    new RegistryImage(this, "FrontPush", {
+    new RegistryImage(this, "FrontEcrImage", {
       name: frontImage.name,
       triggers: { filesha256: frontDockerfileDigest },
     });
@@ -107,7 +107,7 @@ export class MyStack extends TerraformStack {
       functionName: "back-lambda",
       role: lambdaRole.arn,
       packageType: "Image",
-      imageUri: backImageRegistry.name,
+      imageUri: `${backEcrImage.name}@${backEcrImage.sha256Digest}`,
       architectures: ["x86_64"],
       memorySize: 1792,
       timeout: 5,
