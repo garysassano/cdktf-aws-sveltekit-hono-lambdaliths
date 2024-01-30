@@ -65,7 +65,7 @@ export class MyStack extends TerraformStack {
         context: path.join(__dirname, "front"),
         platform: "linux/arm64",
       },
-      name: `${frontRepo.repositoryUrl}:latest`,
+      name: frontRepo.repositoryUrl,
       triggers: { filesha256: frontDockerfileDigest },
     });
 
@@ -74,7 +74,7 @@ export class MyStack extends TerraformStack {
       name: backImage.name,
       triggers: { filesha256: backDockerfileDigest },
     });
-    new RegistryImage(this, "FrontEcrImage", {
+    const frontEcrImage = new RegistryImage(this, "FrontEcrImage", {
       name: frontImage.name,
       triggers: { filesha256: frontDockerfileDigest },
     });
@@ -102,7 +102,7 @@ export class MyStack extends TerraformStack {
         "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
     });
 
-    // Lambda function
+    // Back Lambda function
     const backLambda = new LambdaFunction(this, "BackLambda", {
       functionName: "back-lambda",
       role: lambdaRole.arn,
@@ -115,8 +115,28 @@ export class MyStack extends TerraformStack {
       environment: { variables: { HOME: "/tmp" } },
     });
 
+    // Back Lambda function URL
     new LambdaFunctionUrl(this, "BackLambdaUrl", {
       functionName: backLambda.functionName,
+      authorizationType: "NONE",
+    });
+
+    // Front Lambda function
+    const frontLambda = new LambdaFunction(this, "FrontLambda", {
+      functionName: "front-lambda",
+      role: lambdaRole.arn,
+      packageType: "Image",
+      imageUri: `${frontEcrImage.name}@${frontEcrImage.sha256Digest}`,
+      architectures: ["arm64"],
+      memorySize: 1792,
+      timeout: 5,
+      loggingConfig: { logFormat: "JSON" },
+      environment: { variables: { HOME: "/tmp" } },
+    });
+
+    // Front Lambda function URL
+    new LambdaFunctionUrl(this, "FrontLambdaUrl", {
+      functionName: frontLambda.functionName,
       authorizationType: "NONE",
     });
 
