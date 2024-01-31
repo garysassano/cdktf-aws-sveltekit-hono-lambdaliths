@@ -112,7 +112,13 @@ export class MyStack extends TerraformStack {
       memorySize: 1792,
       timeout: 5,
       loggingConfig: { logFormat: "JSON" },
-      environment: { variables: { HOME: "/tmp" } },
+      environment: {
+        variables: {
+          HOME: "/tmp",
+          REDIS_SERVER:
+            "default:0448efbd82794a06ae1e45d5384753c1@eu2-busy-mudfish-32665.upstash.io:32665",
+        },
+      },
     });
 
     // Back Lambda function URL
