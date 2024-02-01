@@ -96,7 +96,8 @@ export class MyStack extends TerraformStack {
       }),
     });
 
-    new IamRolePolicyAttachment(this, "LambdaExecPolicyAttachment", {
+    // IAM Role Policy for Lambda
+    new IamRolePolicyAttachment(this, "LambdaRolePolicyAttachment", {
       role: lambdaRole.name,
       policyArn:
         "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
