@@ -1,10 +1,10 @@
 export default {
   publicRuntimeConfig: {
-    clientUrl: process.env.CLIENT_API_URL
+    clientUrl: process.env.CLIENT_API_URL ? process.env.CLIENT_API_URL.replace(/\/$/, '') : ''
   },
 
   privateRuntimeConfig: {
-    backendUrl: process.env.BACKEND_API_URL,
+    backendUrl: process.env.BACKEND_API_URL ? process.env.BACKEND_API_URL.replace(/\/$/, '') : ''
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head

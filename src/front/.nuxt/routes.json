@@ -1,0 +1,9 @@
+[
+  {
+    "name": "index",
+    "path": "/",
+    "component": "/home/user/github/cdktf-project/src/front/pages/index.vue",
+    "chunkName": "pages/index",
+    "_name": "_1119daf0"
+  }
+]
