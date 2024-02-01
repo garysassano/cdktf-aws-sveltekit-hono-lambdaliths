@@ -122,7 +122,7 @@ export class MyStack extends TerraformStack {
     });
 
     // Back Lambda function URL
-    new LambdaFunctionUrl(this, "BackLambdaUrl", {
+    const backLambdaFunctionUrl = new LambdaFunctionUrl(this, "BackLambdaUrl", {
       functionName: backLambda.functionName,
       authorizationType: "NONE",
     });
@@ -137,7 +137,13 @@ export class MyStack extends TerraformStack {
       memorySize: 1792,
       timeout: 5,
       loggingConfig: { logFormat: "JSON" },
-      environment: { variables: { HOME: "/tmp" } },
+      environment: {
+        variables: {
+          HOME: "/tmp",
+          BACKEND_API_URL: backLambdaFunctionUrl.functionUrl,
+          CLIENT_API_URL: backLambdaFunctionUrl.functionUrl,
+        },
+      },
     });
 
     // Front Lambda function URL
