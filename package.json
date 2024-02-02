@@ -27,7 +27,7 @@
     "@types/node": "^18",
     "@typescript-eslint/eslint-plugin": "^6",
     "@typescript-eslint/parser": "^6",
-    "cdktf-cli": "0.20.1",
+    "cdktf-cli": "0.20.3",
     "constructs": "^10.0.0",
     "eslint": "^8",
     "eslint-config-prettier": "^9.1.0",
@@ -44,7 +44,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "cdktf": "^0.20.1",
+    "cdktf": "^0.20.3",
     "constructs": "^10.3.0"
   },
   "pnpm": {},

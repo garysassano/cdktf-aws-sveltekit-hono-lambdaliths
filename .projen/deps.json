@@ -21,7 +21,7 @@
     },
     {
       "name": "cdktf-cli",
-      "version": "0.20.1",
+      "version": "0.20.3",
       "type": "build"
     },
     {
@@ -85,7 +85,7 @@
     },
     {
       "name": "cdktf",
-      "version": "^0.20.1",
+      "version": "^0.20.3",
       "type": "runtime"
     },
     {
