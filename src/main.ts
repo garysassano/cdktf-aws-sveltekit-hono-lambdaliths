@@ -117,7 +117,7 @@ export class MyStack extends TerraformStack {
         variables: {
           HOME: "/tmp",
           REDIS_SERVER:
-            "default:0448efbd82794a06ae1e45d5384753c1@eu2-busy-mudfish-32665.upstash.io:32665",
+            "redis://default:01082a7f147849a7bf623acf830ca41d@eu2-learning-dane-32666.upstash.io:32666",
         },
       },
     });

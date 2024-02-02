@@ -1,13 +1,7 @@
 import { Controller, Get, Header } from '@nestjs/common';
 import Redis from 'ioredis';
 
-console.log(process.env.REDIS_SERVER);
-const client = new Redis({
-  host: 'eu2-learning-dane-32666.upstash.io',
-  port: 32666,
-  password: '01082a7f147849a7bf623acf830ca41d',
-});
-
+const client = new Redis(process.env.REDIS_SERVER);
 client.on('error', (err) => console.log('Redis Client Error', err));
 
 @Controller('api/clicks')
