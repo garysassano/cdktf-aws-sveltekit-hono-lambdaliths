@@ -63,7 +63,7 @@ export class MyStack extends TerraformStack {
     const frontImage = new Image(this, "FrontImage", {
       buildAttribute: {
         context: path.join(__dirname, "front"),
-        platform: "linux/amd64",
+        platform: "linux/arm64",
       },
       name: frontRepo.repositoryUrl,
       triggers: { filesha256: frontDockerfileDigest },
@@ -134,7 +134,7 @@ export class MyStack extends TerraformStack {
       role: lambdaRole.arn,
       packageType: "Image",
       imageUri: `${frontEcrImage.name}@${frontEcrImage.sha256Digest}`,
-      architectures: ["x86_64"],
+      architectures: ["arm64"],
       memorySize: 1792,
       timeout: 5,
       loggingConfig: { logFormat: "JSON" },

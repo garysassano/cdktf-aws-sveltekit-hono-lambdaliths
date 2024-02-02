@@ -3,6 +3,7 @@ import { CdktfTypeScriptApp } from "projen-cdktf-app-ts";
 const project = new CdktfTypeScriptApp({
   cdktfVersion: "0.20.1",
   defaultReleaseBranch: "main",
+  depsUpgradeOptions: { workflow: false },
   devDeps: ["projen-cdktf-app-ts"],
   eslint: true,
   name: "cdktf-project",
