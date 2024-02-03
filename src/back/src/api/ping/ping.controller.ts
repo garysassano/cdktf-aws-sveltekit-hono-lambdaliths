@@ -5,6 +5,6 @@ export class PingController {
   @Get()
   @Header('Content-type', 'application/json')
   ping(): object {
-    return {ping: "pong"};
+    return { ping: 'pong' };
   }
 }
