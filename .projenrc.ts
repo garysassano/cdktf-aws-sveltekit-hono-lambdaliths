@@ -13,8 +13,10 @@ const project = new CdktfTypeScriptApp({
   projenrcTs: true,
 
   terraformProviders: [
-    "hashicorp/aws@~> 5.34.0",
+    "hashicorp/aws@~> 5.35.0",
     "kreuzwerker/docker@~> 3.0.2",
   ],
 });
+project.defaultTask?.spawn(project.cdktfTasks.get);
+
 project.synth();
