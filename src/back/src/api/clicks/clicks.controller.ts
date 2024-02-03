@@ -11,7 +11,7 @@ export class ClicksController {
   @Header('Access-Control-Allow-Origin', '*')
   async clicks() {
     const clicks = parseInt(await client.get('clicks')) || 0;
-    return { clicks: clicks };
+    return { clicks };
   }
 
   @Get('incr')
@@ -20,6 +20,6 @@ export class ClicksController {
   async incr() {
     await client.incr('clicks');
     const clicks = parseInt(await client.get('clicks'));
-    return { clicks: clicks };
+    return { clicks };
   }
 }
