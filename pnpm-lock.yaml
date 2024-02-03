@@ -53,11 +53,11 @@ devDependencies:
     specifier: ^3.2.4
     version: 3.2.4
   projen:
-    specifier: ^0.79.3
-    version: 0.79.3(constructs@10.3.0)
+    specifier: ^0.79.7
+    version: 0.79.7(constructs@10.3.0)
   projen-cdktf-app-ts:
     specifier: ^0.0.2
-    version: 0.0.2(projen@0.79.3)
+    version: 0.0.2(projen@0.79.7)
   ts-jest:
     specifier: ^29.1.2
     version: 29.1.2(@babel/core@7.23.7)(jest@29.7.0)(typescript@5.3.3)
@@ -2511,7 +2511,7 @@ packages:
     dependencies:
       semver: 7.5.4
       shelljs: 0.8.5
-      typescript: 5.4.0-dev.20240201
+      typescript: 5.4.0-dev.20240203
     dev: true
 
   /eastasianwidth@0.2.0:
@@ -5184,18 +5184,18 @@ packages:
     resolution: {integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==}
     dev: true
 
-  /projen-cdktf-app-ts@0.0.2(projen@0.79.3):
+  /projen-cdktf-app-ts@0.0.2(projen@0.79.7):
     resolution: {integrity: sha512-XdN8zw+Wj+27ApRg8xB/8k2cAli5Nu597eeV9YUvAeBaPpI4DzUtMaQuj7k+bm7LOZt497E/XYKp0xacrNGTQw==}
     peerDependencies:
       projen: '>=0.67.10 <1.0.0'
     dependencies:
-      projen: 0.79.3(constructs@10.3.0)
+      projen: 0.79.7(constructs@10.3.0)
     dev: true
     bundledDependencies:
       - fs-extra
 
-  /projen@0.79.3(constructs@10.3.0):
-    resolution: {integrity: sha512-nmYW1YXFNdZNNDlfHsT4sMfE5vMgMbpG061RT+gtuvGkhm+6nYd8+kWo6xk+2J/egoNvXyS5kEbh4fFc41I5hA==}
+  /projen@0.79.7(constructs@10.3.0):
+    resolution: {integrity: sha512-G0IBXW72YQXjLZM+E0Eqkw0dyIienPdue5SSK6i3x56WwIi8TGHbSGJzdCDwhDRzzkg2WDAP6U+y01Wksevi4A==}
     engines: {node: '>= 16.0.0'}
     hasBin: true
     peerDependencies:
@@ -6042,8 +6042,8 @@ packages:
     hasBin: true
     dev: true
 
-  /typescript@5.4.0-dev.20240201:
-    resolution: {integrity: sha512-KyjAVgMfyIHhjbaYTeTElvoEKM4teDYYATdzsdcxvogVcaDuH0I0JbiwFUe6bIU5FnWxlbxc7rfGyh7aNwpnow==}
+  /typescript@5.4.0-dev.20240203:
+    resolution: {integrity: sha512-vUKjdnYb/qy4JDKURjUhNosnAVY5KLMwVSojfu7Xd3owzS2bzxd2lxRScNLNfb13ytwKLqWBQ6ZxFT/3Kxx1zQ==}
     engines: {node: '>=14.17'}
     hasBin: true
     dev: true
