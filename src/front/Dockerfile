@@ -1,6 +1,5 @@
 # Base image with node and pnpm
 FROM --platform=${TARGETPLATFORM} public.ecr.aws/docker/library/node:20-slim AS base
-ENV NODE_OPTIONS=--openssl-legacy-provider
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
