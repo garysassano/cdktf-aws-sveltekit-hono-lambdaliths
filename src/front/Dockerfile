@@ -9,7 +9,7 @@ COPY . /var/task
 
 # Prod-deps stage
 FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --shamefully-hoist
 
 # Build stage
 FROM base AS build
