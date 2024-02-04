@@ -22,6 +22,8 @@ COPY --from=prod-deps /var/task/node_modules /var/task/node_modules
 COPY --from=build /var/task/.nuxt /var/task/.nuxt
 ENV NUXT_HOST=0.0.0.0
 ENV NUXT_PORT=3000
+ENV AWS_LWA_READINESS_CHECK_PATH=/ping
+ENV AWS_LWA_READINESS_CHECK_MIN_UNHEALTHY_STATUS=400
 ENV AWS_LWA_PORT=3000
 EXPOSE 3000
 CMD [ "pnpm", "start" ]
