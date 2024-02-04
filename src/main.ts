@@ -1,5 +1,5 @@
 import path from "path";
-import { App, TerraformStack, Fn } from "cdktf";
+import { App, Fn, TerraformStack } from "cdktf";
 import { Construct } from "constructs";
 import { DataAwsEcrAuthorizationToken } from "../.gen/providers/aws/data-aws-ecr-authorization-token";
 // import { DataAwsIamPolicyDocument } from "../.gen/providers/aws/data-aws-iam-policy-document";
