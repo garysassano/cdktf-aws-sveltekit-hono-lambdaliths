@@ -18,7 +18,4 @@ const project = new CdktfTypeScriptApp({
   ],
 });
 
-// Generate CDKTF constructs every time Terraform providers get updated
-project.defaultTask?.spawn(project.cdktfTasks.get);
-
 project.synth();
