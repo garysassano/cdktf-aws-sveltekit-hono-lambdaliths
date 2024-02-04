@@ -18,7 +18,7 @@ const project = new CdktfTypeScriptApp({
   ],
 });
 
-// Generate CDKTF constructs every time Terraform providers get updated
-project.defaultTask?.spawn(project.cdktfTasks.get);
+// Generate CDKTF constructs after installing deps
+project.tasks.tryFind("install")?.spawn(project.cdktfTasks.get);
 
 project.synth();
